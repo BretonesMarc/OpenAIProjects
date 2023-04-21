@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+</head>
+<body>
+    <div>
+        <h1>Chatbot</h1>
+        <div id="chatbox" style="border: 1px solid black; width: 300px; height: 400px; overflow-y: scroll; padding: 10px;"></div>
+        <input type="text" id="message" placeholder="Type your message..." style="width: 300px;">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        let conversation_history = '';
+
+        async function sendMessage() {
+            const message = document.getElementById('message').value;
+            if (!message) return;
+
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+            document.getElementById('message').value = '';
+
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message, conversation_history })
+            }).then(response => response.json());
+
+            conversation_history += `\nUser: ${message}\nAI: ${response.response}`;
+            chatbox.innerHTML += `<p><strong>AI:</strong> ${response.response}</p>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
