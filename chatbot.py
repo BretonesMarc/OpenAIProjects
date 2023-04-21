@@ -9,7 +9,7 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 def chat_with_gpt3(message, conversation_history):
     prompt = f"{conversation_history}\nUser: {message}\nAI:"
     response = openai.Completion.create(
-        engine="davinci-codex",
+        engine="text-davinci-002",
         prompt=prompt,
         max_tokens=150,
         n=1,
